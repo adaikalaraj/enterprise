@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Shop(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.IntegerField(null=True, blank=True)
+    phone = models.CharField(null=True, blank=True, max_length=15)
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
@@ -19,7 +19,7 @@ class Supplier(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='suppliers')
     name = models.CharField(max_length=100)
     joined_date = models.DateField(auto_now_add=True)
-    mobile = models.IntegerField(null=True, blank=True)
+    mobile = models.CharField(null=True, blank=True, max_length=15)
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
@@ -31,7 +31,7 @@ class Buyer(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='buyers')
     name = models.CharField(max_length=100)
     joined_date = models.DateField(auto_now_add=True)
-    mobile = models.IntegerField(null=True, blank=True)
+    mobile = models.CharField(null=True, blank=True, max_length=15)
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
