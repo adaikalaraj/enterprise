@@ -11,6 +11,9 @@ class Shop(models.Model):
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
+    def __str__(self):
+        return self.name
+
 
 class Supplier(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='suppliers')
@@ -19,6 +22,9 @@ class Supplier(models.Model):
     mobile = models.IntegerField(null=True, blank=True)
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
+
+    def __str__(self):
+        return self.name
 
 
 class Buyer(models.Model):
@@ -29,10 +35,16 @@ class Buyer(models.Model):
     amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractUser):
     shop = models.ForeignKey(Shop, null=True, blank=True, on_delete=models.CASCADE, related_name='users')
     phone = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.username
 
 
 class Supply(models.Model):
@@ -40,10 +52,15 @@ class Supply(models.Model):
     date = models.DateField(auto_now_add=True)
     weight = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     rate = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
+    created_by = models.ForeignKey(User, null=True, blank=True, related_name='supplies')
 
     @property
     def amount(self):
-        return self.weight * self.rate
+        return round(self.weight * self.rate, 2)
+
+
+    def __str__(self):
+        return '{} {}'.format(self.supplier, self.date)
 
 
 class Delivery(models.Model):
@@ -51,7 +68,11 @@ class Delivery(models.Model):
     date = models.DateField(auto_now_add=True)
     weight = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     rate = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
+    created_by = models.ForeignKey(User, null=True, blank=True, related_name='deliveries')
 
     @property
     def amount(self):
         return self.weight * self.rate
+
+    def __str__(self):
+        return '{} {}'.format(self.buyer, self.date)

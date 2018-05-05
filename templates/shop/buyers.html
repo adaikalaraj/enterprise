@@ -1,0 +1,28 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block container %}
+<div>
+	<table class="table datatable" id="buyersTable">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Date joined</th>
+			<th>Phone</th>
+			<th>amount</th>
+		</tr>
+	</thead><tbody>
+		{% for buyer in buyers %}
+		<tr>
+			<td>{{buyer.name}}</td>
+			<td>{{buyer.joined_date}}</td>
+			<td>{{buyer.mobile}}</td>
+			<td>{{buyer.amount}}</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

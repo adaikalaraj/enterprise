@@ -3,5 +3,12 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block container %}
-
+<div class="row">
+	<div class="col-md-6"><a href="{% url 'supplies' %}"><span class="fa fa-people-carry fa-5x"></span><p>Supplies</p></a></div>
+	<div class="col-md-6"><a href="{% url 'deliveries' %}"><span class="fa fa-truck fa-5x"></span><p>Deliveries</p></a></div>
+</div>
+<div class="row">
+	<div class="col-md-6"><a href="{% url 'suppliers' %}"><span class="fa fa-users fa-5x"></span><p>Suppliers</p></a></div>
+	<div class="col-md-6"><a href="{% url 'buyers' %}"><span class="fa fa-shopping-basket fa-5x"></span><p>Buyers</p></a></div>
+</div>
 {% endblock %}
