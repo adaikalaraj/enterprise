@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+import settings
 
 urlpatterns = [
 	url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/login/'}),
     url(r'^admin/', admin.site.urls),
     url(r'', include('shops.urls')),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
