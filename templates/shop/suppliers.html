@@ -15,7 +15,7 @@
 	</thead><tbody>
 		{% for supplier in suppliers %}
 		<tr>
-			<td>{{supplier.name}}</td>
+			<td><a href="{% url 'supplier_detail' supplier.id %}">{{supplier.name}}</a></td>
 			<td>{{supplier.joined_date}}</td>
 			<td>{{supplier.mobile}}</td>
 			<td>{{supplier.amount}}</td>

@@ -49,14 +49,21 @@ class User(AbstractUser):
 
 class Supply(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='supplies')
+    buyer =  models.ForeignKey(Buyer, on_delete=models.CASCADE, related_name='supply',)
+    delivery = models.ForeignKey('shops.Delivery', on_delete=models.CASCADE, null=True, blank=True, related_name='supply')
     date = models.DateField(auto_now_add=True)
     weight = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     rate = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     created_by = models.ForeignKey(User, null=True, blank=True, related_name='supplies')
+    debt = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
     @property
     def amount(self):
         return round(self.weight * self.rate, 2)
+
+    @property
+    def final_amount(self):
+        return round(self.amount - (self.amount/10), 2)
 
 
     def __str__(self):
@@ -69,6 +76,7 @@ class Delivery(models.Model):
     weight = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     rate = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
     created_by = models.ForeignKey(User, null=True, blank=True, related_name='deliveries')
+    credit = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
 
     @property
     def amount(self):

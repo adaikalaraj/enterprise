@@ -15,7 +15,7 @@
 	</thead><tbody>
 		{% for buyer in buyers %}
 		<tr>
-			<td>{{buyer.name}}</td>
+			<td><a href="{% url 'buyer_detail' buyer.id %}">{{buyer.name}}</a></td>
 			<td>{{buyer.joined_date}}</td>
 			<td>{{buyer.mobile}}</td>
 			<td>{{buyer.amount}}</td>
