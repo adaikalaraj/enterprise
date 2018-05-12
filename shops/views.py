@@ -88,7 +88,6 @@ def supplier_detail(request, pk):
 	total_amount = 0.0
 	if total.get('total') != None:
 		total_amount = total.get('total')
-	print total_amount
 	commission = round((total_amount /10), 2)
 	final_amount = float(total_amount) - float(commission)
 	return render(request, "shop/supplier_detail.html", {'supplier': supplier, 'supplies': supplies, 'total': total, 'final_amount':final_amount,'commission':commission})
