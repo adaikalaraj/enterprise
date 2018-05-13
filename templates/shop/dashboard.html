@@ -1,6 +1,6 @@
 {% extends 'common/base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Aandal Balaji{% endblock %}
 
 {% block container %}
 <div class="row">
@@ -10,5 +10,7 @@
 <div class="row">
 	<div class="col-md-6"><a href="{% url 'suppliers' %}"><span class="fa fa-users fa-5x"></span><p>Suppliers</p></a></div>
 	<div class="col-md-6"><a href="{% url 'buyers' %}"><span class="fa fa-shopping-basket fa-5x"></span><p>Buyers</p></a></div>
+	<div class="col-md-6"><a href="{% url 'expenses' %}"><span class="fa fa-money-bill-alt fa-5x"></span><p>Expenses</p></a></div>
+
 </div>
 {% endblock %}

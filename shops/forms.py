@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Supply, Delivery
+from .models import Supply, Delivery, Expense
 
 
 class SupplyForm(ModelForm):
@@ -12,3 +12,9 @@ class DeliveryForm(ModelForm):
     class Meta:
         model = Delivery
         fields = ['buyer', 'credit']
+
+
+class ExpenseForm(ModelForm):
+    class Meta:
+        model = Expense
+        fields = ['employee', 'amount', 'reason']

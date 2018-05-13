@@ -1,10 +1,27 @@
 {% extends 'common/base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Supplies{% endblock %}
 
 {% block container %}
 <div>
-	<button type="button" class="btn btn-info btn-sm offset-11" data-toggle="modal" data-target="#myModal">Add Supply</button>
+	<div class="row">
+		<div class="col-md-6">
+			<form action="" method="get">
+				<div class="row">
+					<div class="form-group col-xs-6">
+			        	<label for="id_month">Month:</label> <input type="text" name="date" id="id_month">
+					</div>
+					<div class="form-group col-xs-6">
+					    <input type="submit" />
+					</div>
+				</div>
+		    </form>
+		</div>
+		<div class="col-md-6">
+			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Add Supply</button>
+			<button class="btn btn-info btn-sm" onclick="window.print();">Print</button>
+		</div>
+	</div>
 	<table class="table datatable" id="suppliesTable">
 		<thead>
 		<tr>
@@ -30,7 +47,7 @@
 			<td>{{supply.debt}}</td>
 			<td>{{supply.amount}}</td>
 			{% if user.is_superuser %}
-			<td><a href="{% url 'delete_supplies' supply.id %}" class="btn btn-sm btn-danger">Delete</a></td>
+			<td><a href="{% url 'delete_supplies' supply.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure, You want to delete?')">Delete</a></td>
 			{% endif %}
 		</tr>
 		{% endfor %}
@@ -41,8 +58,9 @@
 			<td></td>
 			<td>{{total.weight}}</td>
 			<td></td>
-			<td></td>
+			<td>{{total.debt}}</td>
 			<td>{{total.total}}</td>
+			<td></td>
 		</tr>
 	</table>
 </div>
@@ -73,4 +91,19 @@
 </div>
 
 
+{% endblock %}
+{% block extra_js %}
+  <script>
+  $(document).ready(function(){
+    $( "#id_month" ).datepicker({
+    	dateFormat: 'mm-yy',
+	 	changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        onClose: function(dateText, inst) { 
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+        }
+    });
+  });
+  </script>
 {% endblock %}

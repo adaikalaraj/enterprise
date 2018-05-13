@@ -1,6 +1,6 @@
 {% extends 'common/base.html' %}
 
-{% block title %}Deliveries{% endblock %}
+{% block title %}Expenses{% endblock %}
 
 {% block container %}
 <div>
@@ -8,17 +8,26 @@
 		<div class="col-md-6">
 			<form action="" method="get">
 				<div class="row">
-					<div class="form-group col-xs-6">
+					<div class="form-group col-xs-4">
 			        	<label for="id_month">Month:</label> <input type="text" name="date" id="id_month">
 					</div>
-					<div class="form-group col-xs-6">
+					<div class="form-group col-xs-4">
+						<select name="employee">
+						  <option value="">----</option>
+						  {% for employee in employees %}
+						  <option value="{{employee.id}}">{{employee}}</option>
+						  {% endfor %}
+						</select>
+					</div>
+
+					<div class="form-group col-xs-4">
 					    <input type="submit" />
 					</div>
 				</div>
 		    </form>
 		</div>
 		<div class="col-md-6">
-			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Add Credit</button>
+			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Add Expense</button>
 			<button class="btn btn-info btn-sm" onclick="window.print();">Print</button>
 		</div>
 	</div>
@@ -26,31 +35,25 @@
 		<thead>
 		<tr>
 			<th>Date</th>
-			<th>Delivery</th>
-			<th>Qty</th>
-			<th>Rate</th>
-			<th>Credit</th>
-			<th>Total</th>
+			<th>Employee</th>
+			<th>Amount</th>
+			<th>Reason</th>
 		</tr>
 	</thead><tbody>
-		{% for delivery in deliveries %}
+		{% for expense in expenses %}
 		<tr>
-			<td>{{delivery.date}}</td>
-			<td>{{delivery.buyer}}</td>
-			<td>{{delivery.weight}}</td>
-			<td>{{delivery.rate}}</td>
-			<td>{{delivery.credit}}</td>
-			<td>{{delivery.amount}}</td>
+			<td>{{expense.date}}</td>
+			<td>{{expense.employee}}</td>
+			<td>{{expense.amount}}</td>
+			<td>{{expense.reason}}</td>
 		</tr>
 		{% endfor %}
 		</tbody>
 		<tr>
 			<td></td>
-			<td></td>
-			<td>{{total.weight}}</td>
-			<td></td>
-			<td>{{total.credit}}</td>
+			<td>Total</td>
 			<td>{{total.total}}</td>
+			<td></td>
 		</tr>
 	</table>
 </div>
@@ -64,7 +67,7 @@
   	<form method="post">
   	{% csrf_token %}
     <div class="modal-header">
-      <h4 class="modal-title">Add Credit</h4>
+      <h4 class="modal-title">Add Expense</h4>
       <button type="button" class="close" data-dismiss="modal">&times;</button>
     </div>
     <div class="modal-body">
@@ -82,7 +85,6 @@
 
 
 {% endblock %}
-
 {% block extra_js %}
   <script>
   $(document).ready(function(){

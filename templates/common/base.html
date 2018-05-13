@@ -15,9 +15,15 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css">        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> 
-           <style>
-    .ui-datepicker-calendar {
-        display: none;
+    <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        .custom_menu{
+                display: -webkit-box!important;
+        }
+        .custom_menu li a{
+            padding:2px;
     }
     </style>
         {% block extra_css %}{% endblock %}
@@ -31,23 +37,25 @@
 
             {% block nav_content %}
                 {% block navbar_brand %}
-                    <a class="navbar-brand" href="{% url 'dashboard' %}">Andal Balaji</a>
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">Aandal Balaji</a>
                 {% endblock %}
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 {% if user.is_authenticated %}
-                <ul class="nav">
+                <ul class="nav custom_menu">
                 <li class="nav-item"><a href="{% url 'supplies' %}"><span class="fa fa-people-carry"></span></a></li>
                 <li class="nav-item"><a href="{% url 'deliveries' %}"><span class="fa fa-truck"></span></a></li>
                 <li class="nav-item"><a href="{% url 'suppliers' %}"><span class="fa fa-users"></span></a></li>
                 <li class="nav-item"><a href="{% url 'buyers' %}"><span class="fa fa-shopping-basket"></span></a></li>
+                <li class="nav-item"><a href="{% url 'expenses' %}"><span class="fa fa-money-bill-alt"></span></a></li>
+
                 </ul>
                 {% endif %}
 
                 {% block navbar_collapse %}
-                <div class="collapse navbar-collapse offset-10" id="navbar">
+                <div class="collapse navbar-collapse offset-8" id="navbar">
                     {% if user.is_authenticated %}
                     <a class="nav-right" href="/logout/">Logout</a>
                     {% endif %}
@@ -87,7 +95,8 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('.datatable').DataTable({
-                    "order": []
+                    "order": [],
+                    paging: false
                 });
             });
         </script>

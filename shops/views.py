@@ -9,9 +9,9 @@ from django.utils import timezone
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from .models import User, Shop, Supplier, Buyer, Supply, Delivery
+from .models import User, Shop, Supplier, Buyer, Supply, Delivery, Expense
 from django.contrib.auth.decorators import user_passes_test
-from .forms import SupplyForm, DeliveryForm
+from .forms import SupplyForm, DeliveryForm, ExpenseForm
 from .filters import SupplyFilter
 
 @login_required
@@ -38,8 +38,14 @@ def supplies(request):
 			buyer.amount = float(buyer.amount) - float(delivery.amount)
 			buyer.save()
 
-	supplies = Supply.objects.filter(date=timezone.now())
-	total = supplies.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')))
+	supplies = Supply.objects.filter(date=timezone.now()).order_by('date')
+	date = request.GET.get('date')
+	if date:
+		date = date.split('-')
+		month = date[0]
+		year = date[1]
+		supplies = Supply.objects.filter(date__month=month, date__year=year).order_by('date')
+	total = supplies.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')), debt=Sum('debt'))
 	return render(request, "shop/supplies.html", {'supplies': supplies, 'total': total, 'form': form})
 
 
@@ -57,8 +63,14 @@ def deliveries(request):
 			buyer = delivery.buyer
 			buyer.amount = float(buyer.amount) + float(delivery.credit)
 			buyer.save()
-	deliveries = Delivery.objects.filter(date=timezone.now())
-	total = deliveries.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')))
+	deliveries = Delivery.objects.filter(date=timezone.now()).order_by('date')
+	date = request.GET.get('date')
+	if date:
+		date = date.split('-')
+		month = date[0]
+		year = date[1]
+		deliveries = Delivery.objects.filter(date__month=month, date__year=year).order_by('date')
+	total = deliveries.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')), credit=Sum('credit'))
 	return render(request, "shop/deliveries.html", {'deliveries': deliveries, 'total': total, 'form': form,})
 
 
@@ -78,27 +90,30 @@ def suppliers(request):
 def supplier_detail(request, pk):
 	supplier = Supplier.objects.get(id=pk)
 	date = request.GET.get('date')
-	supplies = Supply.objects.filter(supplier=supplier).order_by('date')
+	supplies = Supply.objects.filter(supplier=supplier, date=timezone.now()).order_by('date')
 	if date:
 		date = date.split('-')
 		month = date[0]
 		year = date[1]
 		supplies = Supply.objects.filter(supplier=supplier, date__month=month, date__year=year).order_by('date')
-	total = supplies.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')))
+	total = supplies.aggregate(weight=Sum('weight'), total=Sum(F('weight')*F('rate')), debit=Sum('debt'))
 	total_amount = 0.0
+	debit = 0.00
 	if total.get('total') != None:
 		total_amount = total.get('total')
+	if total.get('debit') != None:
+		debit = total.get('debit')
 	commission = round((total_amount /10), 2)
 	final_amount = float(total_amount) - float(commission)
-	return render(request, "shop/supplier_detail.html", {'supplier': supplier, 'supplies': supplies, 'total': total, 'final_amount':final_amount,'commission':commission})
-
+	settlement = final_amount - float(debit)
+	return render(request, "shop/supplier_detail.html", {'supplier': supplier, 'supplies': supplies, 'total': total, 'final_amount':final_amount,'commission':commission, 'settlement': settlement})
 
 
 @login_required
 def buyer_detail(request, pk):
 	buyer = Buyer.objects.get(id=pk)
 	date = request.GET.get('date')
-	deliveries = Delivery.objects.filter(buyer=buyer).order_by('date')
+	deliveries = Delivery.objects.filter(buyer=buyer, date=timezone.now()).order_by('date')
 	if date:
 		date = date.split('-')
 		month = date[0]
@@ -120,3 +135,27 @@ def delete_supplies(request, pk):
 	supply.delete()
 	delivery.delete()
 	return HttpResponseRedirect(reverse('supplies'))
+
+
+@login_required
+def expenses(request):
+	form = ExpenseForm()
+	employees = User.objects.all()
+	if request.POST:
+		form = ExpenseForm(request.POST)
+		if form.is_valid():
+			expense = form.save()
+	expenses = Expense.objects.filter(date=timezone.now()).order_by('date')
+	date = request.GET.get('date')
+	employee = request.GET.get('employee')
+	if date:
+		date = date.split('-')
+		month = date[0]
+		year = date[1]
+		if employee:
+			expenses = Expense.objects.filter(date__month=month, date__year=year, employee__id=employee).order_by('date')
+		else:
+			expenses = Expense.objects.filter(date__month=month, date__year=year).order_by('date')
+	total = expenses.aggregate(total=Sum('amount'))
+	return render(request, "shop/expenses.html", {'expenses': expenses, 'total': total, 'form': form, 'employees': employees,})
+

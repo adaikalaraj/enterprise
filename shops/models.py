@@ -41,7 +41,7 @@ class Buyer(models.Model):
 
 class User(AbstractUser):
     shop = models.ForeignKey(Shop, null=True, blank=True, on_delete=models.CASCADE, related_name='users')
-    phone = models.IntegerField(null=True, blank=True)
+    phone = models.CharField(null=True, blank=True, max_length=15)
 
     def __str__(self):
         return self.username
@@ -84,3 +84,10 @@ class Delivery(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.buyer, self.date)
+
+
+class Expense(models.Model):
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses')
+    date = models.DateField(auto_now_add=True)
+    amount = models.DecimalField(default=0.00, decimal_places=2, max_digits=10)
+    reason = models.CharField(null=True, blank=True, max_length=250)

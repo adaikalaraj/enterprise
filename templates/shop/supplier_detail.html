@@ -1,13 +1,27 @@
 {% extends 'common/base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Supplies{% endblock %}
 
 {% block container %}
 <div>
-	<form action="" method="get">
-        <p><label for="id_month">Month:</label> <input type="text" name="date" id="id_month"></p>
-        <input type="submit" />
-    </form>
+	<div class="row">
+		<div class="col-md-6">
+			<form action="" method="get">
+				<div class="row">
+					<div class="form-group col-xs-6">
+			        	<label for="id_month">Month:</label> <input type="text" name="date" id="id_month">
+					</div>
+					<div class="form-group col-xs-6">
+					    <input type="submit" />
+					</div>
+				</div>
+		    </form>
+		</div>
+		<div class="col-md-6">
+			<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Add Credit</button>
+			<button class="btn btn-info btn-sm" onclick="window.print();">Print</button>
+		</div>
+	</div>
 	<table class="table datatable" id="suppliesTable">
 		<thead>
 		<tr>
@@ -35,7 +49,7 @@
 			<td></td>
 			<td>{{total.weight}}</td>
 			<td></td>
-			<td></td>
+			<td>{{total.debit}}</td>
 			<td>{{total.total}}</td>
 		</tr>
 		<tr>
@@ -54,6 +68,15 @@
 			<td></td>
 			<td>{{final_amount}}</td>
 		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td>Final Settlement</td>
+			<td></td>
+			<td></td>
+			<td>{{settlement}}</td>
+		</tr>
+
 	</table>
 </div>
 
