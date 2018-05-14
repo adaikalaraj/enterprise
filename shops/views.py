@@ -29,7 +29,7 @@ def supplies(request):
 			supply.created_by = request.user
 			supply.save()
 			supplier = supply.supplier
-			supplier.amount = float(supplier.amount) + supply.final_amount - float(supply.debt)
+			supplier.amount = float(supplier.amount) + float(supply.final_amount) - float(supply.debt)
 			supplier.save()
 			delivery = Delivery.objects.create(buyer=supply.buyer, weight=supply.weight, rate=supply.rate, created_by=supply.created_by)
 			supply.delivery = delivery
@@ -128,7 +128,7 @@ def buyer_detail(request, pk):
 def delete_supplies(request, pk):
 	supply = Supply.objects.get(id=pk)
 	delivery = supply.delivery
-	supply.supplier.amount = float(supply.supplier.amount) - supply.final_amount + float(supply.debt)
+	supply.supplier.amount = float(supply.supplier.amount) - float(supply.final_amount) + float(supply.debt)
 	delivery.buyer.amount = float(delivery.buyer.amount) + float(delivery.amount)
 	supply.supplier.save()
 	delivery.buyer.save()
